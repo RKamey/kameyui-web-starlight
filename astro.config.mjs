@@ -4,6 +4,7 @@ import starlight from '@astrojs/starlight';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://kameyui-web-starlight.netlify.app/',
 	integrations: [
 		starlight({
 			title: 'KameyUI',
@@ -13,17 +14,15 @@ export default defineConfig({
       },
 			social: {
 				github: 'https://github.com/RKamey/kamey-ui',
+        linkedin: 'https://www.linkedin.com/in/rkamey/',
 			},
 			sidebar: [
 				{
-					label: '',
-					items: [
-						// Each item here is one entry in the navigation menu.
-						{ label: 'Installation', slug: 'installation/example' },
-					],
+					label: 'Instalación',
+					autogenerate: { directory: 'installation' },
 				},
 				{
-					label: 'Reference',
+					label: 'Componentes',
 					autogenerate: { directory: 'reference' },
 				},
 			],
