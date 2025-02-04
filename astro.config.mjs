@@ -7,6 +7,10 @@ export default defineConfig({
 	integrations: [
 		starlight({
 			title: 'KameyUI',
+      logo: {
+        light: './src/assets/calva-light.webp',
+        dark: './src/assets/calva-dark.webp',
+      },
 			social: {
 				github: 'https://github.com/RKamey/kamey-ui',
 			},
@@ -15,7 +19,7 @@ export default defineConfig({
 					label: '',
 					items: [
 						// Each item here is one entry in the navigation menu.
-						{ label: 'Example Guide', slug: 'guides/example' },
+						{ label: 'Installation', slug: 'installation/example' },
 					],
 				},
 				{
