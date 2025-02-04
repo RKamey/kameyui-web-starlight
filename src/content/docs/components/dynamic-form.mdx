@@ -1,0 +1,109 @@
+---
+title: Dynamic Form
+description: Formulario dinámico y configurable para React hecho con Ant Design.
+---
+import { Code } from '@astrojs/starlight/components';
+
+export const fileName = 'App.tsx';
+export const code = `
+  import { DynamicForm, FormField } from "kamey-components";
+
+  const App = () => {
+
+    // Definimos los campos del formulario y podemos tiparlos con FormField
+    const fields: FormField[] = [
+      {
+        type: 'text',
+        name: 'name',
+        label: 'Nombre',
+        validations: [
+          {
+            required: {
+              value: true,
+              message: 'El nombre es requerido'
+            }
+          }
+        ],
+      },
+      {
+        type: 'text',
+        name: 'lastName',
+        label: 'Apellido',
+        validations: [
+          {
+            required: {
+              value: true,
+              message: 'El apellido es requerido'
+            }
+          }
+        ],
+      },
+      {
+        type: 'email',
+        name: 'email',
+        label: 'Correo',
+        validations: [
+          {
+            required: {
+              value: true,
+              message: 'El correo es requerido'
+            }
+          },
+          {
+            email: {
+              value: true,
+              message: 'El correo no es válido'
+            }
+          }
+        ],
+      },
+      {
+        type: 'password',
+        name: 'password',
+        label: 'Contraseña',
+        validations: [
+          {
+            required: {
+              value: true,
+              message: 'La contraseña es requerida'
+            }
+          }
+        ],
+      }
+    ]
+
+    return (
+      <div>
+        <DynamicForm
+          title='Crear Usuario'
+          description='Por favor, ingrese los datos del usuario'
+          icon={<FaUser />}
+          fields={fields}
+          submitButtonText='Crear Usuario'
+        />
+      </div>
+    );
+  };
+
+  export default App;
+`;
+
+<Code title={fileName} code={code} lang='tsx' />
+
+## API Reference
+Para configurar el formulario, se pueden utilizar las siguientes propiedades:
+
+| Propiedad | Descripción | Tipo | Valor por defecto | Opcional |
+| --- | --- | --- | --- | --- |
+| mode | Modo del formulario | 'create' \| 'update' | 'vertical' | Sí |
+| title | Título del formulario | string | - | Sí |
+| description | Descripción en el header del formulario | string | - | Sí |
+| icon | Icono en el header del formulario | ReactElement | - | Sí |
+| layout | Layout del formulario | 'vertical' \| 'horizontal' | 'vertical' | Sí |
+| cols | Número de columnas del formulario | number | 1 | Sí |
+| fields | Campos del formulario | FormField[] | FormField[][] | - | No |
+| submitButtonText | Texto del botón de submit | string | 'Enviar' | Sí |
+| onSubmit | Función que se ejecuta al hacer submit | (data: unkwown) => void | - | Sí |
+| apiConfig | Configuración de la API | ApiConfig | - | Sí |
+| initialData | Datos iniciales del formulario | Record&lt;string&#44; unknown&gt; | - | Sí |
+| customCols | Columnas personalizadas | boolean | - | Sí |
