@@ -1,0 +1,166 @@
+---
+title: Dynamic Crud
+description: CRUD dinámico y configurable para React hecho con Ant Design.
+---
+import { Code } from '@astrojs/starlight/components';
+
+export const fileName = 'App.tsx';
+export const code = `const App = () => {
+
+  const fields: FormField[] = [
+    {
+      type: 'text',
+      name: 'name',
+      label: 'Nombre',
+      validations: [
+        {
+          required: {
+            value: true,
+            message: 'El nombre es requerido'
+          }
+        }
+      ],
+    },
+    {
+      type: 'text',
+      name: 'lastName',
+      label: 'Apellido',
+      validations: [
+        {
+          required: {
+            value: true,
+            message: 'El apellido es requerido'
+          }
+        }
+      ],
+    },
+    {
+      type: 'email',
+      name: 'email',
+      label: 'Correo',
+      validations: [
+        {
+          required: {
+            value: true,
+            message: 'El correo es requerido'
+          }
+        },
+        {
+          email: {
+            value: true,
+            message: 'El correo no es válido'
+          }
+        }
+      ],
+    },
+    {
+      type: 'password',
+      name: 'password',
+      label: 'Contraseña',
+      validations: [
+        {
+          required: {
+            value: true,
+            message: 'La contraseña es requerida'
+          }
+        }
+      ],
+    }
+  ]
+
+  const columns: ColumnsProps[] = [
+    {
+      key: 'name',
+      title: 'Nombre',
+      dataIndex: 'name',
+      icon: <FaUser />,
+    },
+    {
+      key: 'lastName',
+      title: 'Apellido',
+      dataIndex: 'lastName',
+      icon: <FaUser />,
+    },
+    {
+      key: 'email',
+      title: 'Correo',
+      dataIndex: 'email',
+      icon: <FaUser />,
+    }
+  ];
+
+  const data = [
+    {
+      name: 'Juan',
+      lastName: 'Perez',
+      email: 'juanperez@gmail.com'
+    },
+    {
+      name: 'Maria',
+      lastName: 'Lopez',
+      email: 'marialoopez@hotmail.com',
+    },
+  ]
+
+  return (
+    <div>
+      <DynamicCrud
+        title='Crear Usuario'
+        description='Por favor, ingrese los datos del usuario'
+        icon={<FaUser />}
+        columns={columns}
+        data={data}
+        fields={fields}
+        submitButtonText='Crear Usuario'
+      />
+    </div>
+  );
+};
+
+export default App;
+`;
+
+DynamicCrud es un componente que mezcla DynamicTable y DynamicForm para crear un CRUD completo y configurable. 
+Este componente permite mostrar y gestionar datos en una tabla, una columna de acciones para editar o eliminar registros,
+y un formulario para crear o editar registros que se muestra en un modal.
+
+Además de más configuraciones y propiedades, como cambiar textos, iconos, colores, exportar a Excel los datos de la tabla, etc.
+
+## Ejemplos
+<Code title={fileName} lang="tsx" code={code} />
+
+## API
+
+| Propiedad | Descripción | Tipo | Valor por defecto | Opcional |
+| --- | --- | --- | --- | --- |
+| title | Título que se aplica al formulario y a la tabla | string | - | No |
+| formTitle | Título del formulario | string | - | Sí |
+| formTitles | Títulos del formulario, tanto para crear como para editar | string[] | - | Sí |
+| formDescription | Descripción del formulario | string | - | Sí |
+| columns | Columnas de la tabla | ColumnsProps[] | - | No |
+| data | Datos de la tabla | unkwown[] | - | No |
+| fields | Campos del formulario | FormField[] | - | No |
+| showCreateButton | Muestra el botón de crear | boolean | true | Sí |
+| createButtonText | Texto del botón de crear | string | 'Crear' | Sí |
+| createButtonIcon | Icono del botón de crear | ReactElement | - | Sí |
+| submitButtonText | Texto del botón de submit | string | 'Guardar' | Sí |
+| icon | Icono que se aplica al formulario y a la tabla | ReactElement | - | Sí |
+| layout | Layout del formulario | 'horizontal' \| 'vertical' | 'horizontal' | Sí |
+| actionConfig | Configuración de las acciones de la tabla | ActionConfig | - | Sí |
+| searchConfig | Configuración de la búsqueda de la tabla | SearchConfig | - | Sí |
+| showRefreshButton | Muestra el botón de refrescar | boolean | false | Sí |
+| onRefresh | Función al hacer click en el botón de refrescar | () => void | - | Sí |
+| headerDirection | Dirección del header de la tabla | 'horizontal' \| 'vertical' | 'horizontal' | Sí |
+| loading | Estado de carga de la tabla | boolean | false | Sí |
+| createRedirect | Indica si el botón de crear hará un redirect en vez de abrir la modal con el formulario | boolean | - | Sí |
+| onEdit | Función al hacer click en el botón de edición | (record: unkwown) => void | - | Sí |
+| onDelete | Función al hacer click en el botón de eliminación | (record: unkwown) => void | - | Sí |
+| onView | Función al hacer click en el botón de vista | (record: unkwown) => void | - | Sí |
+| apiConfig | Configuración de la API | ApiConfig | - | Sí |
+| initialData | Datos iniciales del formulario | Record&lt;string&#44; unknown&gt; | - | Sí |
+| themeConfig | Configuración del tema | ThemeConfig | - | Sí |
+| moreActions | Acciones adicionales | MoreActions[] | - | Sí |
+| formCols | Columnas del formulario | number | 1 | Sí |
+| formCustomCols | Columnas personalizadas del formulario | FormCustomCols | - | Sí |
+| showView | Muestra el botón de vista | boolean | false | Sí |
+| exportToExcel | Configuración para exportar a Excel | ExportToExcel | - | Sí |
