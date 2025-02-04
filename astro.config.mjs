@@ -6,13 +6,13 @@ import starlight from '@astrojs/starlight';
 export default defineConfig({
 	integrations: [
 		starlight({
-			title: 'My Docs',
+			title: 'KameyUI',
 			social: {
-				github: 'https://github.com/withastro/starlight',
+				github: 'https://github.com/RKamey/kamey-ui',
 			},
 			sidebar: [
 				{
-					label: 'Guides',
+					label: '',
 					items: [
 						// Each item here is one entry in the navigation menu.
 						{ label: 'Example Guide', slug: 'guides/example' },
