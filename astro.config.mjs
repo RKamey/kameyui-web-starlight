@@ -10,7 +10,7 @@ export default defineConfig({
 			title: 'KameyUI',
       logo: {
         light: './src/assets/calva-light.webp',
-        dark: './src/assets/calva-dark.webp',
+        src: './src/assets/calva-dark.webp',
       },
 			social: {
 				github: 'https://github.com/RKamey/kamey-ui',
@@ -23,7 +23,7 @@ export default defineConfig({
 				},
 				{
 					label: 'Componentes',
-					autogenerate: { directory: 'reference' },
+					autogenerate: { directory: 'components' },
 				},
 			],
 		}),

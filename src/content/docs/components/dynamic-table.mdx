@@ -1,0 +1,113 @@
+---
+title: Dynamic Table
+description: Tabla dinámica y configurable para React hecha con Ant Design.
+---
+import { Code } from '@astrojs/starlight/components';
+
+export const fileName = 'App.tsx';
+export const code = `import { DynamicTable, ColumnsProps } from "kamey-components";
+
+const App = () => {
+
+  // Definimos las columnas y podemos tiparlas con ColumnsProps
+  const columns: ColumnsProps[] = [
+    {
+      title: "Nombre",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "Edad",
+      dataIndex: "age",
+      key: "age",
+    },
+    {
+      title: "Direccion",
+      dataIndex: "address",
+      key: "address",
+    }
+  ];
+
+  // Podemos definir los datos de la tabla o traerlos de una API
+  const data = [
+    {
+      key: "1",
+      name: "Juan",
+      age: 32,
+      address: "Calle 123",
+    },
+    {
+      key: "2",
+      name: "Pedro",
+      age: 42,
+      address: "Calle 456",
+    },
+    {
+      key: "3",
+      name: "Maria",
+      age: 22,
+      address: "Calle 789",
+    },
+  ];
+
+  return (
+    <div>
+      <DynamicTable
+        title="Usuarios"
+        description="Lista de usuarios"
+        columns={columns}
+        data={data}
+        exportToExcel={{
+          data,
+          fileName: "usuarios",
+          sheetName: "Usuarios",
+          columns,
+          buttonProps: {
+            text: "Exportar a Excel",
+            style: {
+              borderRadius: 5,
+              padding: 10,
+              margin: 10,
+            }
+          }
+        }}
+      />
+    </div>
+  );
+};
+
+export default App;
+`;
+
+El componente DynamicTable es una tabla dinámica que permite mostrar y gestionar datos. Además, es configurable y permite personalizar la tabla según las necesidades del usuario.
+
+### Ejemplos
+<Code code={code} title={fileName} lang="tsx" />
+
+## API
+Para configurar la tabla, se pueden utilizar las siguientes propiedades:
+
+| Propiedad | Descripción | Tipo | Valor por defecto | Opcional |
+| --- | --- | --- | --- | --- |
+| title | Título de la tabla | string | - | Sí |
+| description | Descripción en el header de la tabla | string | - | Sí |
+| icon | Icono en el header de la tabla | ReactElement | - | Sí |
+| headerDirection | Dirección del header | 'horizontal' \| 'vertical' | 'horizontal' | Sí |
+| columns | Columnas de la tabla | ColumnProps[] | - | No |
+| data | Datos de la tabla | unkwown[] | - | No |
+| classname | Clase CSS adicional | string | - | Sí |
+| loading | Estado de carga de la tabla | boolean | false | Sí |
+| showCreateButton | Mostrar botón de creación | boolean | false | Sí |
+| showRefreshButton | Mostrar botón de refresco | boolean | false | Sí |
+| createButtonText | Texto del botón de creación | string | 'Crear' | Sí |
+| createButtonIcon | Icono del botón de creación | ReactElement | - | Sí |
+| moreActions | Acciones adicionales | MoreActions[] | - | Sí |
+| onCreate | Función al hacer click en el botón de creación | () => void | - | Sí |
+| onView | Función al hacer click en el botón de vista | (record: unkwown) => void | - | Sí |
+| onEdit | Función al hacer click en el botón de edición | (record: unkwown) => void | - | Sí |
+| onDelete | Función al hacer click en el botón de eliminación | (record: unkwown) => void | - | Sí |
+| onRefresh | Función al hacer click en el botón de refresco | () => void | - | Sí |
+| actionConfig | Configuración de las acciones | ActionConfig | - | Sí |
+| searchConfig | Configuración de la búsqueda | SearchConfig | - | Sí |
+| themeConfig | Configuración del tema | ThemeConfig | - | Sí |
+| exportToExcel | Exportar a Excel | ExcelConfigProps | false | Sí |
