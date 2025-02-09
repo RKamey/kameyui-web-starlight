@@ -5,6 +5,16 @@ description: Gestión de instancias de Axios con versionado de API
 
 Clase utilitaria para crear y gestionar múltiples instancias de Axios con diferentes versiones de API, optimizando el reuso de conexiones.
 
+La idea de esto es tener API's con diferentes versiones y poder manejarlas de manera sencilla y centralizada.
+
+Imagina que tienes tus API's versionadas de la siguiente manera:
+
+- `https://api.tudominio.com/v1`
+- `https://api.tudominio.com/v2`
+- `https://api.tudominio.com/2019-01-01`
+
+En este ejemplo, el dominio es el mismo, pero cada versión de la API tiene una URL diferente. Con `ApiVersioning` puedes aprovechar esto para crear instancias de Axios con la URL base y su versión correspondiente
+
 ## Uso Básico
 
 Crea y obtén instancias versionadas de Axios:
