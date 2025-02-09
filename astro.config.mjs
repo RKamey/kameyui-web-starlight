@@ -25,6 +25,14 @@ export default defineConfig({
 					label: 'Componentes',
 					autogenerate: { directory: 'components' },
 				},
+        {
+          label: 'Hooks',
+          autogenerate: { directory: 'hooks' },
+        },
+        {
+          label: 'Utils',
+          autogenerate: { directory: 'utils' },
+        }
 			],
 		}),
 	],

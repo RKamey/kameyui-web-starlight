@@ -1,0 +1,126 @@
+---
+title: ApiVersioning
+description: Gestión de instancias de Axios con versionado de API
+---
+
+Clase utilitaria para crear y gestionar múltiples instancias de Axios con diferentes versiones de API, optimizando el reuso de conexiones.
+
+## Uso Básico
+
+Crea y obtén instancias versionadas de Axios:
+
+```typescript
+import { ApiVersioning } from 'tu-libreria';
+import axios from 'axios';
+
+// Configuración inicial
+const apiManager = new ApiVersioning(import.meta.env.VITE_API_URL); // Usando variable de entorno
+
+// Obtener instancias para diferentes versiones
+const apiV1 = apiManager.getInstance('v1');
+const apiV2 = apiManager.getInstance('v2');
+
+// Ejemplo de uso
+const fetchUsers = async () => {
+  try {
+    const response = await apiV1.get('/users');
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error('Error en v1:', error.response?.data);
+    }
+    throw error;
+  }
+};
+```
+
+## Constructor
+
+### `new ApiVersioning(baseUrl: string)`
+Crea una nueva instancia del gestor de versiones.
+
+**Parámetros:**
+| Nombre   | Tipo     | Descripción                          |
+|----------|----------|--------------------------------------|
+| `baseUrl`| `string` | URL base de la API (ej: `https://api.tudominio.com`) |
+
+## Métodos
+
+### `getInstance(version: string)`
+Obtiene una instancia de Axios para una versión específica (crea una nueva si no existe).
+
+**Parámetros:**
+| Nombre      | Tipo     | Descripción                          |
+|-------------|----------|--------------------------------------|
+| `version`   | `string` | Versión de la API (ej: `'v1'`, `'v2'`) |
+
+**Retorna:**  
+Instancia configurada de Axios con `baseURL` establecida a:  
+`${baseUrl}/${version}`
+
+## Ejemplo Avanzado
+
+```typescript
+// Configuración centralizada
+const API_BASE_URL = import.meta.env.VITE_API_URL;
+
+// Uso con diferentes versiones en paralelo
+const mainApi = new ApiVersioning(API_BASE_URL);
+
+export const apiEndpoints = {
+  v1: mainApi.getInstance('v1'),
+  v2: mainApi.getInstance('v2'),
+  legacy: mainApi.getInstance('2019-01-01')
+};
+
+// Uso en componentes
+const fetchLegacyData = () => apiEndpoints.legacy.get('/historical-records');
+```
+
+## Beneficios Clave
+
+1. **Instancias Singleton:**  
+   Evita múltiples instancias para la misma versión
+
+2. **Configuración Centralizada:**  
+   Cambios en la URL base se propagan a todas las versiones
+
+3. **Extensible:**  
+   Fácilmente adaptable para agregar:
+   - Interceptores globales
+   - Configuraciones personalizadas por versión
+   - Manejo centralizado de errores
+
+## Demo en vivo
+
+Puedes ver un ejemplo de uso en vivo en [CodeSandbox](https://codesandbox.io/p/sandbox/pk6jhd).
+
+## Recursos Adicionales
+
+- [Axios: Creating an instance](https://axios-http.com/docs/instance)
+- [Axios: Handling errors](https://axios-http.com/docs/handling_errors)
+- [Axios: Interceptors](https://axios-http.com/docs/interceptors)
+
+## API Reference
+Constructor y métodos de la clase `ApiVersioning`.
+
+### `new ApiVersioning(baseUrl: string)`
+Crea una nueva instancia del gestor de versiones.
+
+**Parámetros:**
+| Nombre   | Tipo     | Descripción                          |
+|----------|----------|--------------------------------------|
+| `baseUrl`| `string` | URL base de la API (ej: `https://api.tudominio.com`) |
+
+### `getInstance(version: string)`
+Obtiene una instancia de Axios para una versión específica (crea una nueva si no existe).
+
+**Parámetros:**
+| Nombre      | Tipo     | Descripción                          |
+|-------------|----------|--------------------------------------|
+| `version`   | `string` | Versión de la API (ej: `'v1'`, `'v2'`) |
+
+**Retorna:**
+Instancia configurada de Axios con `baseURL` establecida a:  
+`${baseUrl}/${version}`
+```

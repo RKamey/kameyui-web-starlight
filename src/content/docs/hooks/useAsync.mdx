@@ -1,0 +1,116 @@
+---
+title: useAsync
+description: Hook personalizado para manejar operaciones asíncronas en React.
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+## Introducción
+
+El hook `useAsync` facilita la gestión de operaciones asíncronas en componentes funcionales de React. Simplifica el manejo de estados de carga, éxito y error al interactuar con funciones asíncronas.
+
+## Parámetros
+
+- `asyncFunction ( () => Promise<T>)`: La función asíncrona que se ejecutará. Debe devolver una promesa que resuelva el tipo `T`.
+- `dependencies (unknown[])`: Un array de dependencias que, al cambiar, volverán a ejecutar la función asíncrona. Por defecto, es un array vacío.
+
+## Valores de retorno
+
+El hook devuelve un objeto con las siguientes propiedades:
+
+- `data (T | undefined)`: El resultado de la función asíncrona una vez completada. Inicialmente es `undefined`.
+- `error (Error | null)`: Contiene un objeto `Error` si la función asíncrona falla. De lo contrario, es `null`.
+- `isLoading (boolean)`: Indica si la función asíncrona está en progreso. Es `true` mientras la promesa está pendiente.
+
+## Implementación
+
+El hook `useAsync` se puede utilizar con funciones asíncronas nativas de JavaScript o con librerías como Axios. A continuación, se muestra un ejemplo de uso con la función `fetch`.
+
+Imagina que necesitas obtener datos de un API, y tienes una función `fetchCharacter` que devuelve una promesa con un personaje.
+En este caso, puedes utilizar el hook `useAsync` para manejar la carga de datos de forma sencilla, y acceder a su estado de carga o error.
+
+<Tabs>
+  <TabItem label="App.tsx">
+    ```tsx
+      import { useAsync } from 'kamey-components';
+      import { fetchCharacter } from './api/character';
+
+      export default function App() {
+        const { data: character, error, loading } = useAsync(fetchCharacter, []);
+
+        if (loading) return <p>Cargando...</p>;
+        if (error) return <p>Error: {error.message}</p>;
+        if (!character) return null;
+
+        return <p>{JSON.stringify(character)}</p>;
+      }
+    ```
+  </TabItem>
+
+  <TabItem label="api/character">
+    ```ts
+      export const fetchCharacter = async () => {
+        const response = await fetch('https://rickandmortyapi.com/api/character/1');
+        if (!response.ok) {
+          throw new Error('No se pudo obtener el personaje');
+        }
+        return response.json();
+      };
+    ```
+  </TabItem>
+</Tabs>
+
+Ahora, el array de dependencias está vacío, por lo que la función `fetchCharacter` solo se ejecutará una vez al renderizar el componente. Si necesitas volver a ejecutar la función, puedes añadir dependencias al array.
+Esto es útil cuando necesitas recargar datos o ejecutar la función con diferentes argumentos.
+
+## Ejemplo
+Siguiendo con el ejemplo de los personajes, imagina que necesitas crear una vista de los detalles de un personaje por su ID.
+Comunmente, utilizarías un componente de React con un `useEffect` para cargar los datos al montar el componente.
+
+Y eso está bien, pero muchas veces se suele repetir el mismo patrón en diferentes componentes. Para eso es útil el hook `useAsync`, ya que encapsula esa lógica y te ahorra tiempo y código.
+
+<Tabs>
+  <TabItem label="CharacterDetails.tsx">
+    ```tsx
+      import { useAsync } from 'kamey-components';
+      import { fetchCharacter } from './api/character';
+
+      export default function CharacterDetails({ characterId }) {
+        const { data: character, error, loading } = useAsync(() => fetchCharacter(characterId), [characterId]);
+
+        if (loading) return <p>Cargando...</p>;
+        if (error) return <p>Error: {error.message}</p>;
+        if (!character) return null;
+
+        return <p>{JSON.stringify(character)}</p>;
+      }
+    ```
+  </TabItem>
+
+  <TabItem label="api/character">
+    ```ts
+      export const fetchCharacter = async (id) => {
+        const response = await fetch(`https://rickandmortyapi.com/api/character/${id}`);
+        if (!response.ok) {
+          throw new Error('No se pudo obtener el personaje');
+        }
+        return response.json();
+      };
+    ```
+  </TabItem>
+</Tabs>
+
+En este caso, el hook `useAsync` se ejecutará cada vez que cambie el `characterId`, lo que te permite cargar los datos de un personaje diferente.
+
+Si quieres ver un ejemplo más completo, puedes revisar el siguiente [proyecto](https://codesandbox.io/p/sandbox/use-async-zts4tw).
+
+## API Reference
+
+### `useAsync(asyncFunction, dependencies)`
+- `asyncFunction ( () => Promise<T>)`: La función asíncrona que se ejecutará. Debe devolver una promesa que resuelva el tipo `T`.
+- `dependencies (unknown[])`: Un array de dependencias que, al cambiar, volverán a ejecutar la función asíncrona. Por defecto, es un array vacío.
+
+### Valores de retorno
+- `data (T | undefined)`: El resultado de la función asíncrona una vez completada. Inicialmente es `undefined`.
+- `error (Error | null)`: Contiene un objeto `Error` si la función asíncrona falla. De lo contrario, es `null`.
+- `isLoading (boolean)`: Indica si la función asíncrona está en progreso. Es `true` mientras la promesa está pendiente.
