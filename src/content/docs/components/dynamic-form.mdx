@@ -296,3 +296,32 @@ const fields: FormField[] = [
   submitButtonText="Actualizar Usuario"
 />;
 ```
+
+### Envío de datos a una API
+La forma más común de enviar datos de un formulario a una API es usando la propiedad `onSubmit`, que recibe un objeto con los valores de los campos.
+
+```tsx
+const fields: FormField[] = [
+  { type: "text", name: "name", label: "Nombre" },
+  { type: "text", name: "lastName", label: "Apellido" },
+  { type: "email", name: "email", label: "Correo" },
+  { type: "password", name: "password", label: "Contraseña" },
+];
+
+const handleSubmit = (data: Record<string, unknown>) => {
+  // Aquí puedes enviar los datos a tu API
+  console.log(data);
+};
+
+<DynamicForm
+  fields={fields}
+  onSubmit={handleSubmit}
+/>;
+```
+
+## Buenas Prácticas
+
+- 🔒 **Tipado de Campos**: Usa la interfaz `FormField` para tipar los campos del formulario.
+- 📝 **Validaciones Contextuales**: Ajusta las validaciones según el modo (create/update) y tipo de campo.
+- 📦 **Organización de Campos**: Agrupa campos relacionados usando el sistema de columnas.
+- 🐛 **Manejo de Errores**: Implementa lógica de notificación en el callback `onSubmit`.

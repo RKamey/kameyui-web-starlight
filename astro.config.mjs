@@ -23,7 +23,11 @@ export default defineConfig({
 				},
 				{
 					label: 'Componentes',
-					autogenerate: { directory: 'components' },
+          badge: 'New',
+					autogenerate: { 
+            directory: 'components', 
+            collapsed: true
+          },
 				},
         {
           label: 'Hooks',
