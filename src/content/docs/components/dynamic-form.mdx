@@ -1,14 +1,15 @@
 ---
 title: Dynamic Form
-description: Formulario dinámico y configurable para React hecho con Ant Design.
+description: Formulario dinámico y configurable para React con validaciones integradas, múltiples layouts y soporte para API.
 ---
+
 import { Code } from '@astrojs/starlight/components';
 
 export const fileName = 'App.tsx';
 export const code = `
   import { DynamicForm, FormField } from "kamey-components";
 
-  const App = () => {
+const App = () => {
 
     // Definimos los campos del formulario y podemos tiparlos con FormField
     const fields: FormField[] = [
@@ -83,27 +84,215 @@ export const code = `
         />
       </div>
     );
-  };
 
-  export default App;
+};
+
+export default App;
 `;
 
-<Code title={fileName} code={code} lang='tsx' />
+<Code title={fileName} code={code} lang="tsx" />
+
+## Características Principales
+
+- ✅ Configuración declarativa de campos
+- ✅ Validaciones integradas y personalizables
+- ✅ Soporte para layouts vertical/horizontal
+- ✅ Integración con APIs (CRUD)
+- ✅ Campos responsivos en múltiples columnas
+- ✅ Modos creación/actualización
+
+## Uso Básico
+
+```tsx
+// Ejemplo mínimo de implementación
+<DynamicForm fields={[{ type: "text", name: "example", label: "Ejemplo" }]} />
+```
 
 ## API Reference
-Para configurar el formulario, se pueden utilizar las siguientes propiedades:
 
-| Propiedad | Descripción | Tipo | Valor por defecto | Opcional |
-| --- | --- | --- | --- | --- |
-| mode | Modo del formulario | 'create' \| 'update' | 'vertical' | Sí |
-| title | Título del formulario | string | - | Sí |
-| description | Descripción en el header del formulario | string | - | Sí |
-| icon | Icono en el header del formulario | ReactElement | - | Sí |
-| layout | Layout del formulario | 'vertical' \| 'horizontal' | 'vertical' | Sí |
-| cols | Número de columnas del formulario | number | 1 | Sí |
-| fields | Campos del formulario | FormField[] | FormField[][] | - | No |
-| submitButtonText | Texto del botón de submit | string | 'Enviar' | Sí |
-| onSubmit | Función que se ejecuta al hacer submit | (data: unkwown) => void | - | Sí |
-| apiConfig | Configuración de la API | ApiConfig | - | Sí |
-| initialData | Datos iniciales del formulario | Record&lt;string&#44; unknown&gt; | - | Sí |
-| customCols | Columnas personalizadas | boolean | - | Sí |
+Propiedades del Componente
+
+| Propiedad        | Descripción                                                                    | Tipo                                              | Por defecto | Requerido |
+| ---------------- | ------------------------------------------------------------------------------ | ------------------------------------------------- | ----------- | --------- |
+| mode             | Modo de operación ('create' para crear nuevos registros, 'update' para editar) | 'create' \| 'update'                              | 'create'    | Sí        |
+| title            | Título principal del formulario                                                | string                                            | -           | No        |
+| description      | Texto descriptivo debajo del título                                            | string \| ReactElement                            | -           | No        |
+| icon             | Icono que acompaña al título                                                   | ReactElement                                      | -           | No        |
+| layout           | Disposicíon de los campos                                                      | 'vertical' \| 'horizontal'                        | 'vertical'  | No        |
+| cols             | Número de columnas para organización responsiva                                | number                                            | 1           | No        |
+| fields           | Configuracíon de campos del formulario                                         | [FormField[] \| FormField[][]](./form-field)      | -           | Sí        |
+| submitButtonText | Texto personalizado para el botón de envío                                     | string                                            | 'Enviar'    | No        |
+| onSubmit         | Callback que se ejecuta al enviar el formulario                                | (data: Record&lt;string&#44; unknown&gt;) => void | -           | No        |
+| apiConfig        | Configuración para conexión con API                                            | [ApiConfig](./api-config)                         | -           | No        |
+| initialData      | Datos iniciales para el modo de edición                                        | Record&lt;string&#44; unknown&gt;                 | -           | No        |
+| customCols       | Habilita organización avanzada de columnas                                     | boolean                                           | false       | No        |
+
+## Tipos de Campos (FormField)
+
+Cada campo debe contener estas propiedades básicas:
+
+```tsx
+interface FormField {
+  type: FieldType;
+  name: string;
+  label: string;
+  // ... otras propiedades opcionales o que dependen del tipo de campo
+}
+```
+
+### Tipos Disponibles (FieldType)
+
+- `text` - Campo de texto simple
+- `email` - Campo de email con validación automática
+- `password` - Campo de contraseña con visibilidad ocultable
+- `number` - Campo numérico
+- `datepicker` - Selector de fecha, con soporte para formato de hora y fecha
+- `rangepicker` - Selector de rango de fechas
+- `select` - Selector de opciones, con soporte para opciones dinámicas
+- `radio` - Selector de opciones en radio buttons
+- `checkbox` - Selector de opciones en checkboxes
+- `textarea` - Campo de texto multilínea
+- `upload` - Selector de archivos, con soporte para múltiples archivos
+- `slider` - Selector de rango numérico
+- `switch` - Selector de estado binario
+
+### Ejemplo Completo de Campo
+
+```tsx
+{
+  type: 'select',
+  name: 'country',
+  label: 'País',
+  options: [
+    { label: 'México', value: 'MX' },
+    { label: 'España', value: 'ES' }
+  ],
+  validations: [
+    {
+      required: {
+        value: true,
+        message: 'Selecciona tu país'
+      }
+    }
+  ]
+}
+```
+
+### Sistema de validación
+
+Configura reglas de validación por campo usando el formato
+
+```tsx
+{
+  validations: [
+    {
+      required: true // requerido con mensaje por defecto
+    },
+    {
+      required: { // requerido con mensaje personalizado
+        value: true,
+        message: 'Este campo es requerido'
+      }
+    },
+    {
+      email: {
+        value: true,
+        message: 'Correo no válido'
+      }
+    }
+    {
+      minLength: {
+        value: 5,
+        message: 'Mínimo 5 caracteres'
+      }
+    },
+    {
+      maxLength: {
+        value: 10,
+        message: 'Máximo 10 caracteres'
+      }
+    },
+    {
+      pattern: {
+        value: /^[A-Za-z]+$/,
+        message: 'Solo letras'
+      }
+    },
+  ]
+}
+```
+
+## Ejemplos Avanzados
+
+### Formularios con Columnas Personalizadas
+
+```tsx
+// Puedes configurar los campos a tu antojo, en una fila tener 4, en otras 2, etc.
+const fields: FormField[][] = [ // Nota que este tipado es diferente, es un arreglo de arreglos
+  [
+    { type: "text", name: "name", label: "Nombre" },
+    { type: "text", name: "lastName", label: "Apellido" },
+    { type: "number", name: "age", label: "Edad" },
+  ],
+  [
+    { type: "email", name: "email", label: "Correo" },
+    { type: "password", name: "password", label: "Contraseña" },
+  ],
+]
+
+
+<DynamicForm
+  layout='horizontal'
+  cols={2}
+  customCols // Debes habilitar esta propiedad para usar campos personalizados
+  fields={fields}
+/>
+```
+
+### Usando la propiedad Cols
+
+```tsx
+// Esta configuración es más sencilla y automática, defines los campos como siempre
+const fields: FormField[] = [
+  { type: "text", name: "name", label: "Nombre" },
+  { type: "text", name: "lastName", label: "Apellido" },
+  { type: "number", name: "age", label: "Edad" },
+  { type: "email", name: "email", label: "Correo" },
+  { type: "password", name: "password", label: "Contraseña" },
+]
+
+<DynamicForm
+  cols={2} // Indicas cuántas columnas quieres, y el componente se encarga de distribuirlos
+  fields={fields}
+/>
+```
+
+### Recibir datos iniciales para edición
+
+Imagina que tienes una vista de edición de usuario, recibes los datos del usuario ya sea de una API, por props, etc.
+Cuando tengas este caso, debes asegurarte que el campo `name` de cada `FormField` coincida con la clave del objeto de datos iniciales.
+
+```tsx
+const initialData = {
+  name: "Juan",
+  lastName: "Perez",
+  email: "juan@gmail.com",
+};
+
+const fields: FormField[] = [
+  { type: "text", name: "name", label: "Nombre" },
+  { type: "text", name: "lastName", label: "Apellido" },
+  { type: "email", name: "email", label: "Correo" },
+  { type: "password", name: "password", label: "Contraseña" },
+];
+
+<DynamicForm
+  mode="update"
+  title="Editar Usuario"
+  description="Actualiza los datos del usuario"
+  icon={<FaUser />}
+  fields={fields}
+  initialData={initialData}
+  submitButtonText="Actualizar Usuario"
+/>;
+```

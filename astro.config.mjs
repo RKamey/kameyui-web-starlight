@@ -32,7 +32,7 @@ export default defineConfig({
         {
           label: 'Utils',
           autogenerate: { directory: 'utils' },
-        }
+        },
 			],
 		}),
 	],
