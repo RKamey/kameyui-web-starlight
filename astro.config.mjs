@@ -9,13 +9,14 @@ export default defineConfig({
 		starlight({
 			title: 'KameyUI',
       logo: {
-        light: './src/assets/calva-light.webp',
-        src: './src/assets/calva-dark.webp',
+        light: './src/assets/calvito.png',
+        dark: './src/assets/calvito.png',
       },
 			social: {
 				github: 'https://github.com/RKamey/kamey-ui',
         linkedin: 'https://www.linkedin.com/in/rkamey/',
 			},
+      customCss: ['./src/styles/style.css'],
 			sidebar: [
 				{
 					label: 'Instalación',
