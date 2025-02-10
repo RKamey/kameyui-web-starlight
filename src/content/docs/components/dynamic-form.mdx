@@ -3,7 +3,7 @@ title: Dynamic Form
 description: Formulario dinámico y configurable para React con validaciones integradas, múltiples layouts y soporte para API.
 ---
 
-import { Code } from '@astrojs/starlight/components';
+import { Aside, Code } from '@astrojs/starlight/components';
 
 export const fileName = 'App.tsx';
 export const code = `
@@ -156,6 +156,19 @@ interface FormField {
 - `slider` - Selector de rango numérico
 - `switch` - Selector de estado binario
 
+<Aside type='tip'>
+  Cuando quieres crear la configuración de los campos, puedes definir una constante y tiparla con `FormField[]` para tener autocompletado y validación de tipos.
+
+```tsx
+const fields: FormField[] = [
+  { type: "text", name: "example", label: "Ejemplo" },
+  { type: "email", name: "email", label: "Correo" },
+  { type: "password", name: "password", label: "Contraseña" },
+];
+```
+
+</Aside>
+
 ### Ejemplo Completo de Campo
 
 ```tsx
@@ -298,6 +311,7 @@ const fields: FormField[] = [
 ```
 
 ### Envío de datos a una API
+
 La forma más común de enviar datos de un formulario a una API es usando la propiedad `onSubmit`, que recibe un objeto con los valores de los campos.
 
 ```tsx
@@ -313,10 +327,7 @@ const handleSubmit = (data: Record<string, unknown>) => {
   console.log(data);
 };
 
-<DynamicForm
-  fields={fields}
-  onSubmit={handleSubmit}
-/>;
+<DynamicForm fields={fields} onSubmit={handleSubmit} />;
 ```
 
 ## Buenas Prácticas
@@ -325,3 +336,121 @@ const handleSubmit = (data: Record<string, unknown>) => {
 - 📝 **Validaciones Contextuales**: Ajusta las validaciones según el modo (create/update) y tipo de campo.
 - 📦 **Organización de Campos**: Agrupa campos relacionados usando el sistema de columnas.
 - 🐛 **Manejo de Errores**: Implementa lógica de notificación en el callback `onSubmit`.
+
+## Configuración Avanzada de Campos
+
+### Selects
+
+```tsx
+1. // Pasar opciones predefinidas a un campo select
+{
+  type: 'select',
+  name: 'country',
+  label: 'País',
+  options: [
+    { label: 'México', value: 'MX' },
+    { label: 'España', value: 'ES' }
+  ]
+}
+
+2. // Consumir opciones de una API
+{
+  type: 'select',
+  name: 'city',
+  label: 'Ciudad',
+  selectConfig: {
+    apiConfig: { // Configuración de la API
+      url: 'https://api.thecompaniesapi.com/v2/locations/continents', // URL de la API
+      valueKey: 'code', // Clave del valor, será el valor del campo, y será el valor enviado al servidor
+      labelKey: 'name', // Clave de la etiqueta, será el texto mostrado en el selector
+      responseDataPath: 'continents', // Ruta de los datos en la respuesta de la API, muchas veces los datos vienen en .data pero puede variar
+    }
+  }
+}
+
+2.1 // También puedes consumir datos desde funciones asíncronas en lugar de una URL
+{
+  type: 'select',
+  name: 'city',
+  label: 'Ciudad',
+  selectConfig: {
+    apiConfig: {
+      getterMethod: async () => getContinents(),
+      valueKey: 'code',
+      labelKey: 'name',
+      responseDataPath: 'countries',
+      
+    }
+  }
+}
+
+3. // Selects dependientes: Llenar un select con base en la selección de otro
+{
+  type: 'select',
+  name: 'drink',
+  label: 'Bebida',
+  selectConfig: {
+    apiConfig: {
+      url: 'https://www.thecocktaildb.com/api/json/v1/1/random.php',
+      valueKey: 'idDrink',      // Clave del valor en la respuesta API
+      labelKey: 'strDrink',     // Clave del texto a mostrar
+      responseDataPath: 'drinks' // Ruta donde están los datos en la respuesta
+    },
+    onChange: (value) => { console.log('Selected drink:', value); }
+  }
+},
+{
+  type: 'select',
+  name: 'drink_info',
+  label: 'Información de la bebida',
+  selectConfig: {
+    dependsOn: {
+      field: 'drink',           // Nombre del campo padre del que depende
+      apiUrl: 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=:strDrink',
+      method: 'GET',
+      labelKey: 'strDrink',     // Clave para el texto de las opciones
+      valueKey: 'idDrink',      // Clave para el valor de las opciones
+      idPlaceholder: ':strDrink',     // Marcador a reemplazar en la URLs
+    }
+  }
+}
+```
+
+### Datepickers
+
+```tsx
+1. // Selector de fecha simple
+{
+  type: 'datepicker',
+  name: 'birthday',
+  label: 'Fecha de Nacimiento'
+}
+
+2. // Formateo de fecha
+{
+  type: 'datepicker',
+  name: 'birthday',
+  label: 'Fecha de Nacimiento',
+  datepickerConfig: {
+    format: 'DD/MM/YYYY' // Puedes configurar otras opciones como 'MM/DD/YYYY', 'YYYY-MM-DD', etc.
+  }
+}
+
+3. // Selector de fecha y hora
+{
+  type: 'datepicker',
+  name: 'birthday',
+  label: 'Fecha de Nacimiento',
+  datepickerConfig: {
+    format: 'DD/MM/YYYY HH:mm' // Puedes configurar otras opciones como 'DD/MM/YYYY HH:mm:ss', etc.
+    showTime: true
+  }
+}
+
+4. // Rango de fechas
+{
+  type: 'rangepicker',
+  name: 'dates',
+  label: 'Rango de Fechas'
+}
+```
