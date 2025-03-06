@@ -1,0 +1,40 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  size?: number;
+  rounded?: boolean;
+  redirectTo?: string;
+}
+
+const { src, alt, size = 40, rounded = false, redirectTo }: Props = Astro.props;
+---
+
+<div class:list={["avatar", { rounded }]} style={`width: ${size}px; height: ${size}px`}>
+  <a href={redirectTo} target="_blank">
+    <img src={src} alt={alt}>
+  </a>
+</div>
+
+<style>
+  .avatar {
+    overflow: hidden;
+    display: inline-block;
+  }
+
+  .avatar:hover {
+    transform: scale(1.1);
+    transition: transform ease-in-out 0.3s;
+  }
+  
+  .rounded {
+    border-radius: 50%;
+  }
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+</style>
+
